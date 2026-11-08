@@ -5,6 +5,9 @@ import {
   Press_Start_2P,
 } from "next/font/google";
 import "./globals.css";
+import { SiteFooter } from "./components/site-footer";
+import { SiteNav } from "./components/site-nav";
+import { UserProvider } from "./components/user-context";
 
 const pressStart = Press_Start_2P({
   weight: "400",
@@ -41,7 +44,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <div className="av-bg" aria-hidden="true" />
         <div className="av-noise" aria-hidden="true" />
-        <div className="av-app">{children}</div>
+        <div className="av-app">
+          <UserProvider>
+            <SiteNav />
+            <main className="av-main">{children}</main>
+            <SiteFooter />
+          </UserProvider>
+        </div>
       </body>
     </html>
   );
