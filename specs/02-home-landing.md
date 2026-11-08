@@ -1,6 +1,6 @@
 # SPEC 02 — Landing de inicio y biblioteca en `/games`
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** SPEC 01
 > **Fecha:** 2026-11-08
 > **Objetivo:** Implementar la landing pública en `/` según el template `home-about` y mover la biblioteca actual a `/games` con su navegación actualizada.
