@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@font-face {
+  font-family: "Press Start 2P";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/press-start-2p.woff2") format("woff2");
+}
+
 /* ===== ARCADE VAULT — theme ===== */
 :root {
   --bg: #0a0a0f;
@@ -17,9 +25,8 @@
   --bronze: #d97a3a;
   --line: rgba(0, 245, 255, 0.18);
   --line-2: rgba(255, 255, 255, 0.06);
-  --pixel: var(--font-press-start), system-ui, monospace;
-  --mono: var(--font-jetbrains-mono), var(--font-courier-prime), "Courier Prime",
-    "Courier New", monospace;
+  --pixel: "Press Start 2P", system-ui, monospace;
+  --mono: "JetBrains Mono", "Courier Prime", "Courier New", monospace;
 }
 
 @theme inline {
@@ -73,6 +80,17 @@ select {
 a {
   color: inherit;
   text-decoration: none;
+}
+
+/* Tailwind Preflight neutralizes the UA heading weight; the template relies on
+   the browser default (bold) for its pixel-font headings. */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
 }
 
 /* ===== background: perspective grid + scanlines + vignette ===== */
@@ -147,7 +165,7 @@ a {
   z-index: 2;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
+  height: 100%;
 }
 .av-main {
   flex: 1;
@@ -375,6 +393,7 @@ a {
   font-family: var(--pixel);
   font-size: 10px;
   letter-spacing: 0.16em;
+  text-align: center;
   background: transparent;
   color: var(--ink);
   border: 1px solid var(--cyan);
@@ -535,6 +554,7 @@ a {
   background: transparent;
   border: 0;
   outline: 0;
+  padding: 1px 2px;
   color: var(--ink);
   font-size: 13px;
   letter-spacing: 0.04em;
