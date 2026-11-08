@@ -1,17 +1,13 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import {
   Courier_Prime,
   JetBrains_Mono,
-  Press_Start_2P,
 } from "next/font/google";
 import "./globals.css";
-
-const pressStart = Press_Start_2P({
-  weight: "400",
-  subsets: ["latin"],
-  variable: "--font-press-start",
-  display: "swap",
-});
+import { SiteFooter } from "./components/site-footer";
+import { SiteNav, SiteNavFallback } from "./components/site-nav";
+import { UserProvider } from "./components/user-context";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -36,12 +32,20 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="es"
-      className={`${pressStart.variable} ${jetbrainsMono.variable} ${courierPrime.variable}`}
+      className={`${jetbrainsMono.variable} ${courierPrime.variable}`}
     >
       <body>
         <div className="av-bg" aria-hidden="true" />
         <div className="av-noise" aria-hidden="true" />
-        <div className="av-app">{children}</div>
+        <div className="av-app">
+          <UserProvider>
+            <Suspense fallback={<SiteNavFallback />}>
+              <SiteNav />
+            </Suspense>
+            <main className="av-main">{children}</main>
+            <SiteFooter />
+          </UserProvider>
+        </div>
       </body>
     </html>
   );
