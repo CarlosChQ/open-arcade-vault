@@ -3,26 +3,36 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import type { SessionUser } from "@/app/data/games";
 import { useUser } from "./user-context";
 
-export function SiteNav() {
-  const pathname = usePathname();
-  const { user, signOut } = useUser();
-  const [open, setOpen] = useState(false);
+interface NavChromeProps {
+  isLibrary: boolean;
+  isHall: boolean;
+  isAuth: boolean;
+  user: SessionUser | null;
+  open: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+  onSignOut: () => void;
+}
 
-  const isLibrary =
-    pathname === "/" ||
-    pathname.startsWith("/games") ||
-    pathname.startsWith("/play");
-  const isHall = pathname === "/hall-of-fame";
-  const isAuth = pathname === "/auth";
-
-  const close = () => setOpen(false);
+function NavChrome({
+  isLibrary,
+  isHall,
+  isAuth,
+  user,
+  open,
+  onOpen,
+  onClose,
+  onSignOut,
+}: NavChromeProps) {
+  const activeClass = (active: boolean) => (active ? "active" : "");
 
   return (
     <>
       <nav className="av-nav">
-        <Link href="/" className="logo" onClick={close}>
+        <Link href="/" className="logo" onClick={onClose}>
           <div className="logo-mark" />
           <div className="logo-text neon-cyan">
             ARCADE <span className="neon-magenta">VAULT</span>
@@ -30,13 +40,10 @@ export function SiteNav() {
         </Link>
 
         <div className="links">
-          <Link href="/" className={isLibrary ? "active" : ""}>
+          <Link href="/" className={activeClass(isLibrary)}>
             Biblioteca
           </Link>
-          <Link
-            href="/hall-of-fame"
-            className={isHall ? "active" : ""}
-          >
+          <Link href="/hall-of-fame" className={activeClass(isHall)}>
             Salón de la Fama
           </Link>
         </div>
@@ -52,7 +59,7 @@ export function SiteNav() {
           <button
             type="button"
             className="btn ghost auth-btn"
-            onClick={signOut}
+            onClick={onSignOut}
           >
             {user.name} ▾
           </button>
@@ -65,7 +72,7 @@ export function SiteNav() {
         <button
           type="button"
           className="btn ghost hamburger"
-          onClick={() => setOpen(true)}
+          onClick={onOpen}
           aria-label="Menú"
         >
           ≡
@@ -74,23 +81,26 @@ export function SiteNav() {
 
       <div
         className={"av-mobile-backdrop" + (open ? " open" : "")}
-        onClick={close}
+        onClick={onClose}
       />
       <aside className={"av-mobile-panel" + (open ? " open" : "")}>
-        <div className="pixel neon-cyan" style={{ fontSize: 11, marginBottom: 16 }}>
+        <div
+          className="pixel neon-cyan"
+          style={{ fontSize: 11, marginBottom: 16 }}
+        >
           MENÚ
         </div>
-        <Link href="/" className={isLibrary ? "active" : ""} onClick={close}>
+        <Link href="/" className={activeClass(isLibrary)} onClick={onClose}>
           Biblioteca
         </Link>
         <Link
           href="/hall-of-fame"
-          className={isHall ? "active" : ""}
-          onClick={close}
+          className={activeClass(isHall)}
+          onClick={onClose}
         >
           Salón de la Fama
         </Link>
-        <Link href="/auth" className={isAuth ? "active" : ""} onClick={close}>
+        <Link href="/auth" className={activeClass(isAuth)} onClick={onClose}>
           {user ? "Cuenta" : "Iniciar Sesión"}
         </Link>
         <div style={{ flex: 1 }} />
@@ -106,5 +116,46 @@ export function SiteNav() {
         </div>
       </aside>
     </>
+  );
+}
+
+export function SiteNav() {
+  const pathname = usePathname();
+  const { user, signOut } = useUser();
+  const [open, setOpen] = useState(false);
+
+  const isLibrary =
+    pathname === "/" ||
+    pathname.startsWith("/games") ||
+    pathname.startsWith("/play");
+  const isHall = pathname === "/hall-of-fame";
+  const isAuth = pathname === "/auth";
+
+  return (
+    <NavChrome
+      isLibrary={isLibrary}
+      isHall={isHall}
+      isAuth={isAuth}
+      user={user}
+      open={open}
+      onOpen={() => setOpen(true)}
+      onClose={() => setOpen(false)}
+      onSignOut={signOut}
+    />
+  );
+}
+
+export function SiteNavFallback() {
+  return (
+    <NavChrome
+      isLibrary={false}
+      isHall={false}
+      isAuth={false}
+      user={null}
+      open={false}
+      onOpen={() => {}}
+      onClose={() => {}}
+      onSignOut={() => {}}
+    />
   );
 }

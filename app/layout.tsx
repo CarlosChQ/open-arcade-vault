@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import {
   Courier_Prime,
   JetBrains_Mono,
@@ -6,7 +7,7 @@ import {
 } from "next/font/google";
 import "./globals.css";
 import { SiteFooter } from "./components/site-footer";
-import { SiteNav } from "./components/site-nav";
+import { SiteNav, SiteNavFallback } from "./components/site-nav";
 import { UserProvider } from "./components/user-context";
 
 const pressStart = Press_Start_2P({
@@ -46,7 +47,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="av-noise" aria-hidden="true" />
         <div className="av-app">
           <UserProvider>
-            <SiteNav />
+            <Suspense fallback={<SiteNavFallback />}>
+              <SiteNav />
+            </Suspense>
             <main className="av-main">{children}</main>
             <SiteFooter />
           </UserProvider>

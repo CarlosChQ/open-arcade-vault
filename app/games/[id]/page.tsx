@@ -2,6 +2,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { GAMES, seededScores } from "@/app/data/games";
 
+export const instant = false;
+
+export function generateStaticParams() {
+  return GAMES.map((game) => ({ id: game.id }));
+}
+
 export default async function GameDetailPage({
   params,
 }: PageProps<"/games/[id]">) {
