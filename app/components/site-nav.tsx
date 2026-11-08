@@ -7,6 +7,7 @@ import type { SessionUser } from "@/app/data/games";
 import { useUser } from "./user-context";
 
 interface NavChromeProps {
+  isHome: boolean;
   isLibrary: boolean;
   isHall: boolean;
   isAuth: boolean;
@@ -18,6 +19,7 @@ interface NavChromeProps {
 }
 
 function NavChrome({
+  isHome,
   isLibrary,
   isHall,
   isAuth,
@@ -40,7 +42,10 @@ function NavChrome({
         </Link>
 
         <div className="links">
-          <Link href="/" className={activeClass(isLibrary)}>
+          <Link href="/" className={activeClass(isHome)}>
+            Inicio
+          </Link>
+          <Link href="/games" className={activeClass(isLibrary)}>
             Biblioteca
           </Link>
           <Link href="/hall-of-fame" className={activeClass(isHall)}>
@@ -90,7 +95,10 @@ function NavChrome({
         >
           MENÚ
         </div>
-        <Link href="/" className={activeClass(isLibrary)} onClick={onClose}>
+        <Link href="/" className={activeClass(isHome)} onClick={onClose}>
+          Inicio
+        </Link>
+        <Link href="/games" className={activeClass(isLibrary)} onClick={onClose}>
           Biblioteca
         </Link>
         <Link
@@ -124,15 +132,17 @@ export function SiteNav() {
   const { user, signOut } = useUser();
   const [open, setOpen] = useState(false);
 
+  const isHome = pathname === "/";
   const isLibrary =
-    pathname === "/" ||
-    pathname.startsWith("/games") ||
-    pathname.startsWith("/play");
+    pathname === "/games" ||
+    pathname.startsWith("/games/") ||
+    pathname.startsWith("/play/");
   const isHall = pathname === "/hall-of-fame";
   const isAuth = pathname === "/auth";
 
   return (
     <NavChrome
+      isHome={isHome}
       isLibrary={isLibrary}
       isHall={isHall}
       isAuth={isAuth}
@@ -148,6 +158,7 @@ export function SiteNav() {
 export function SiteNavFallback() {
   return (
     <NavChrome
+      isHome={false}
       isLibrary={false}
       isHall={false}
       isAuth={false}
