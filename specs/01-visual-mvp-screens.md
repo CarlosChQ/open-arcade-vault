@@ -1,6 +1,6 @@
 # SPEC 01 — MVP visual de Arcade Vault
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** —
 > **Fecha:** 2026-11-07
 > **Objetivo:** Implementar visualmente las cinco pantallas del template de Arcade Vault con rutas reales y datos ficticios locales, sin lógica de juego.
