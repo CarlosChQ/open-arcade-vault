@@ -328,6 +328,7 @@ h6 {
 
 @media (max-width: 840px) {
   .av-nav {
+    gap: 12px;
     padding: 12px 16px;
   }
   .av-nav .links {
