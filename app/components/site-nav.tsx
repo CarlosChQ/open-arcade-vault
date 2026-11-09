@@ -10,6 +10,7 @@ interface NavChromeProps {
   isHome: boolean;
   isLibrary: boolean;
   isHall: boolean;
+  isAbout: boolean;
   isAuth: boolean;
   user: SessionUser | null;
   open: boolean;
@@ -22,6 +23,7 @@ function NavChrome({
   isHome,
   isLibrary,
   isHall,
+  isAbout,
   isAuth,
   user,
   open,
@@ -50,6 +52,9 @@ function NavChrome({
           </Link>
           <Link href="/hall-of-fame" className={activeClass(isHall)}>
             Salón de la Fama
+          </Link>
+          <Link href="/about" className={activeClass(isAbout)}>
+            Acerca de
           </Link>
         </div>
 
@@ -108,6 +113,9 @@ function NavChrome({
         >
           Salón de la Fama
         </Link>
+        <Link href="/about" className={activeClass(isAbout)} onClick={onClose}>
+          Acerca de
+        </Link>
         <Link href="/auth" className={activeClass(isAuth)} onClick={onClose}>
           {user ? "Cuenta" : "Iniciar Sesión"}
         </Link>
@@ -138,6 +146,7 @@ export function SiteNav() {
     pathname.startsWith("/games/") ||
     pathname.startsWith("/play/");
   const isHall = pathname === "/hall-of-fame";
+  const isAbout = pathname === "/about";
   const isAuth = pathname === "/auth";
 
   return (
@@ -145,6 +154,7 @@ export function SiteNav() {
       isHome={isHome}
       isLibrary={isLibrary}
       isHall={isHall}
+      isAbout={isAbout}
       isAuth={isAuth}
       user={user}
       open={open}
@@ -161,6 +171,7 @@ export function SiteNavFallback() {
       isHome={false}
       isLibrary={false}
       isHall={false}
+      isAbout={false}
       isAuth={false}
       user={null}
       open={false}

@@ -2763,6 +2763,13 @@ select:focus-visible {
   opacity: 0.55;
   cursor: not-allowed;
 }
+.contact-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
 .contact-field-error {
   font-family: var(--mono);
   font-size: 11px;
