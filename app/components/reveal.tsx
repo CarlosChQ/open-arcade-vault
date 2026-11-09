@@ -5,13 +5,18 @@ import { useEffect, useRef, type ReactNode } from "react";
 interface RevealProps {
   className?: string;
   children: ReactNode;
+  as?: "section" | "div";
 }
 
-export function Reveal({ className, children }: RevealProps) {
-  const sectionRef = useRef<HTMLElement>(null);
+export function Reveal({
+  className,
+  children,
+  as = "section",
+}: RevealProps) {
+  const elementRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const element = sectionRef.current;
+    const element = elementRef.current;
     if (!element) return;
 
     if (typeof IntersectionObserver === "undefined") {
@@ -36,12 +41,16 @@ export function Reveal({ className, children }: RevealProps) {
     return () => observer.disconnect();
   }, []);
 
+  const Tag = as;
+
   return (
-    <section
-      ref={sectionRef}
+    <Tag
+      ref={(node) => {
+        elementRef.current = node;
+      }}
       className={"reveal" + (className ? " " + className : "")}
     >
       {children}
-    </section>
+    </Tag>
   );
 }
