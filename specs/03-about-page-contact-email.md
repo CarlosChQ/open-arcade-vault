@@ -26,7 +26,7 @@ SPEC 02 dejó la página Acerca de fuera de alcance y omitió su link en el nav.
 - Link `Acerca de` en el nav de desktop y en el panel móvil, activo solo en `/about`.
 - Estilos de la página portados desde `references/resources/templates/home-about/styles.css`.
 - `metadata` propia de `/about`.
-- `.env.example` con las tres variables, excepción en `.gitignore` y sección de variables en `README.md`.
+- `.env.template` con las tres variables, excepción en `.gitignore` y sección de variables en `README.md`.
 - Dependencia `resend` en `package.json`.
 
 **Fuera de alcance (para futuras specs):**
@@ -93,7 +93,7 @@ CONTACT_FROM_EMAIL=Arcade Vault <no-reply@tu-dominio-verificado.com>
 
 ## Plan de implementación
 
-1. Instalar `resend` como dependencia. Crear `.env.example` con las tres variables, agregar `!.env.example` después de `.env*` en `.gitignore` y documentar las variables en `README.md`. Verificar que `npm run build` sigue pasando sin variables definidas.
+1. Instalar `resend` como dependencia. Crear `.env.template` con las tres variables, mantener la excepción `!.env.template` después de `.env*` en `.gitignore` y documentar las variables en `README.md`. Verificar que `npm run build` sigue pasando sin variables definidas.
 2. Agregar al final de `app/globals.css` los estilos `.about*`, `.highlight*`, `.div-*`, `.contact-*`, `.terminal-*`, `.term-*`, `.btn.press`, `@keyframes shake` y `@keyframes pxblink`. Reutilizar `.field`, `.kicker`, `.pixel`, `.neon-*`, `.btn.xl`, `.reveal`, `fade-in` y `blink` ya existentes. Verificar que la landing y el auth no cambian.
 3. Extender `app/components/reveal.tsx` con una prop opcional `as?: "section" | "div"` (por defecto `"section"`), manteniendo el observer y el fallback actuales. Verificar que el home sigue animando sus secciones.
 4. Crear `app/components/about-highlight-icon.tsx` como server component con los SVG pixel `HEART`, `BROWSER` y `PLANT` del template.
@@ -129,7 +129,7 @@ CONTACT_FROM_EMAIL=Arcade Vault <no-reply@tu-dominio-verificado.com>
 - [ ] El logo y los demás links del nav navegan sin cambios.
 - [ ] `/about` se ve sin solapamientos a 390px y a 1440px de ancho.
 - [ ] No hay errores ni warnings de hidratación en la consola del navegador.
-- [ ] `.env.example` existe, no está ignorado por git y coincide con las variables que lee la acción.
+- [ ] `.env.template` existe, no está ignorado por git y coincide con las variables que lee la acción.
 - [ ] `README.md` documenta `RESEND_API_KEY`, `CONTACT_TO_EMAIL` y `CONTACT_FROM_EMAIL`.
 - [ ] `npm run build` pasa sin `RESEND_API_KEY` definida.
 - [ ] `npx tsc --noEmit`, `npm run lint` y `npm run build` terminan sin errores.
@@ -145,7 +145,7 @@ CONTACT_FROM_EMAIL=Arcade Vault <no-reply@tu-dominio-verificado.com>
 - **Sí:** error de configuración visible cuando falta la API key. Un modo mock ocultaría un despliegue mal configurado.
 - **Sí:** honeypot + rate limit en memoria. Frena bots simples y ráfagas sin agregar una base de datos.
 - **Sí:** límite por IP obtenida de cabeceras. Es suficiente para un formulario público; no se usa como mecanismo de autenticación.
-- **Sí:** `.env.example` versionado y documentado en README. Deja el contrato de configuración a la vista sin filtrar secretos.
+- **Sí:** `.env.template` versionado y documentado en README. Deja el contrato de configuración a la vista sin filtrar secretos.
 - **Sí:** fidelidad 1:1 al template en copy, estructura y estilos. Ya es el criterio de SPEC 01 y SPEC 02.
 - **Sí:** `Reveal` acepta `div` además de `section`. El divisor del template es un `div` y la animación debe mantenerse.
 - **No:** acuse de recibo al usuario. Duplica llamadas a Resend y puede empeorar la reputación de un dominio nuevo.
@@ -159,7 +159,7 @@ CONTACT_FROM_EMAIL=Arcade Vault <no-reply@tu-dominio-verificado.com>
 
 | Riesgo | Mitigación |
 | --- | --- |
-| Resend exige un dominio verificado; `onboarding@resend.dev` solo envía a la cuenta del dueño | Documentar la verificación de dominio en README y usar un remitente de ejemplo coherente en `.env.example`. |
+| Resend exige un dominio verificado; `onboarding@resend.dev` solo envía a la cuenta del dueño | Documentar la verificación de dominio en README y usar un remitente de ejemplo coherente en `.env.template`. |
 | El rate limit en memoria se reinicia al reiniciar el server y no se comparte entre instancias | Es una barrera best-effort; Resend también aplica límites. Si se necesita estricto, se migra a KV o base de datos en otra spec. |
 | `x-forwarded-for` se puede falsificar | Se usa solo para throttling, nunca para autorización; se toma el primer segmento y se documenta el límite. |
 | Inyección de HTML en el correo desde nombre o mensaje | Escapar `&`, `<`, `>`, `"` y `'` antes de interpolar en la plantilla HTML. |
