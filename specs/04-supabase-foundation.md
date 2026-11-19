@@ -1,6 +1,6 @@
 # SPEC 04 — Fundación de Supabase: clientes SSR y verificación de conexión
 
-> **Estado:** Aprobado
+> **Estado:** Implementado
 > **Depende de:** —
 > **Fecha:** 2026-11-18
 > **Objetivo:** Conectar la aplicación a Supabase con clientes SSR reutilizables y un comando que verifique URL y llave, sin autenticación ni persistencia.
