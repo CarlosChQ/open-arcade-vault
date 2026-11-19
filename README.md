@@ -31,5 +31,9 @@ Copia `.env.template` a `.env.local` y completa los valores:
 | `RESEND_API_KEY` | API key de [Resend](https://resend.com). Si falta, el formulario de contacto responde con un error de configuración y no envía nada. |
 | `CONTACT_TO_EMAIL` | Dirección que recibe los mensajes enviados desde `/about`. |
 | `CONTACT_FROM_EMAIL` | Remitente del correo, con formato `Nombre <correo@dominio>`. El dominio debe estar verificado en Resend. |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto de Supabase, por ejemplo `https://tu-proyecto.supabase.co`. |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Publishable key del proyecto (`sb_publishable_...`). Es pública por diseño y viaja al navegador; la seguridad de los datos dependerá de RLS. |
+
+Las variables `NEXT_PUBLIC_*` se inlinean en build: si cambias sus valores, reinicia `npm run dev`; en producción hay que reconstruir. `npm run check:supabase` comprueba la URL y la publishable key contra el endpoint `/auth/v1/health` sin necesitar tablas ni sesión.
 
 Resend exige un dominio verificado para enviar a cualquier destinatario. `onboarding@resend.dev` solo permite enviar a la dirección de la cuenta del dueño, así que verifica tu dominio y configura sus registros SPF y DKIM en el panel de Resend antes de usar `CONTACT_FROM_EMAIL` en producción.
