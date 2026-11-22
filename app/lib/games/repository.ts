@@ -1,3 +1,5 @@
+import { connection } from "next/server";
+
 import {
   GAMES,
   seededScores,
@@ -114,6 +116,8 @@ export async function getGames(): Promise<Game[]> {
     return GAMES;
   }
 
+  await connection();
+
   try {
     const supabase = await createSupabaseServerClient();
     const { data, error } = await supabase
@@ -146,6 +150,8 @@ export async function getGameById(id: string): Promise<Game | null> {
   if (!isSupabaseConfigured()) {
     return GAMES.find((game) => game.id === id) ?? null;
   }
+
+  await connection();
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -186,6 +192,8 @@ export async function getLeaderboard(
   if (!isSupabaseConfigured()) {
     return seededScores(gameId.length * 17 + 3, limit);
   }
+
+  await connection();
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -236,6 +244,8 @@ export async function getRecentActivity(limit = 7): Promise<ActivityRow[]> {
   if (!isSupabaseConfigured()) {
     return ACTIVITY_FEED.slice(0, limit);
   }
+
+  await connection();
 
   try {
     const supabase = await createSupabaseServerClient();
@@ -288,6 +298,8 @@ export async function getTopPlayers(limit = 5): Promise<TopPlayer[]> {
   if (!isSupabaseConfigured()) {
     return TOP_PLAYERS.slice(0, limit);
   }
+
+  await connection();
 
   try {
     const supabase = await createSupabaseServerClient();
