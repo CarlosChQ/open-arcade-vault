@@ -76,9 +76,10 @@ export async function HomeActivity() {
   );
 }
 
+/** Fallback mínimo mientras resuelven catálogo y leaderboards. */
 export function HomeActivitySkeleton() {
   return (
-    <div className="activity-grid" aria-hidden="true">
+    <div className="activity-grid skeleton-activity" aria-hidden="true">
       <div className="activity-card">
         <div className="ac-head">
           <div className="skeleton-line" style={{ width: "45%" }} />
