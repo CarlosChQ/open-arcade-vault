@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
+import { HomeActivity, HomeActivitySkeleton } from "./components/home-activity";
+import { HomeCatalog, HomeCatalogSkeleton } from "./components/home-catalog";
 import { HomeFeatureIcon } from "./components/home-feature-icon";
-import { HomeMiniCard } from "./components/home-mini-card";
 import { HomeSilhouettes } from "./components/home-silhouettes";
 import { Reveal } from "./components/reveal";
-import { GAMES } from "./data/games";
-import { ACTIVITY_FEED, TOP_PLAYERS } from "./data/home";
 
 export const metadata: Metadata = {
   title: "Arcade Vault · El arcade clásico está de vuelta",
@@ -129,11 +129,9 @@ export default function Home() {
           <h2 className="section-title">JUEGOS DISPONIBLES AHORA</h2>
           <div className="section-rule" />
         </div>
-        <div className="mini-rail">
-          {GAMES.slice(0, 6).map((game) => (
-            <HomeMiniCard key={game.id} game={game} />
-          ))}
-        </div>
+        <Suspense fallback={<HomeCatalogSkeleton />}>
+          <HomeCatalog />
+        </Suspense>
         <div style={{ textAlign: "center", marginTop: 24 }}>
           <Link href="/games" className="btn lg">
             VER TODOS LOS JUEGOS →
@@ -163,69 +161,9 @@ export default function Home() {
           <h2 className="section-title">ACTIVIDAD EN VIVO</h2>
           <div className="section-rule" />
         </div>
-        <div className="activity-grid">
-          <div className="activity-card">
-            <div className="ac-head">
-              <div className="ac-title pixel">▸ ÚLTIMAS PUNTUACIONES</div>
-            </div>
-            <div className="ticker">
-              {ACTIVITY_FEED.map((row, index) => (
-                <div
-                  key={row.player}
-                  className="tick-row"
-                  style={{ animationDelay: `${index * 60}ms` }}
-                >
-                  <span className={"tk-p neon-" + row.accent}>{row.player}</span>
-                  <span className="tk-mid">▸ {row.game}</span>
-                  <span className="tk-s">
-                    +{row.score.toLocaleString("es-ES")}
-                  </span>
-                  <span className="tk-t">{row.time}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="activity-card">
-            <div className="ac-head">
-              <div className="ac-title pixel neon-magenta">
-                ▸ TOP JUGADORES · HOY
-              </div>
-              <Link href="/hall-of-fame" className="lb-link">
-                VER SALÓN →
-              </Link>
-            </div>
-            <div className="top-list">
-              {TOP_PLAYERS.map((row, index) => (
-                <div
-                  key={row.player}
-                  className={
-                    "top-row" +
-                    (index === 0
-                      ? " top1"
-                      : index === 1
-                        ? " top2"
-                        : index === 2
-                          ? " top3"
-                          : "")
-                  }
-                >
-                  <span className="tp-rk">
-                    #{String(row.rank).padStart(2, "0")}
-                  </span>
-                  <span className="tp-bar">
-                    <span
-                      className="tp-fill"
-                      style={{ width: `${100 - index * 16}%` }}
-                    />
-                  </span>
-                  <span className="tp-p">{row.player}</span>
-                  <span className="tp-s">{row.score.toLocaleString("es-ES")}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <Suspense fallback={<HomeActivitySkeleton />}>
+          <HomeActivity />
+        </Suspense>
       </Reveal>
 
       <Reveal className="home-section">
