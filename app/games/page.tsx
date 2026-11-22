@@ -1,6 +1,9 @@
-import { GameCard } from "../components/game-card";
+import { Suspense } from "react";
+import {
+  CatalogGrid,
+  CatalogGridSkeleton,
+} from "../components/catalog-grid";
 import { LibraryFilters } from "../components/library-filters";
-import { GAMES } from "../data/games";
 
 export default function GamesPage() {
   return (
@@ -14,11 +17,9 @@ export default function GamesPage() {
 
       <LibraryFilters />
 
-      <div className="av-grid">
-        {GAMES.map((game) => (
-          <GameCard key={game.id} game={game} />
-        ))}
-      </div>
+      <Suspense fallback={<CatalogGridSkeleton />}>
+        <CatalogGrid />
+      </Suspense>
     </div>
   );
 }
