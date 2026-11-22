@@ -8,7 +8,8 @@ export type CoverName =
   | "cover-invaders"
   | "cover-rocas"
   | "cover-rana"
-  | "cover-duelo";
+  | "cover-duelo"
+  | "cover-asteroides";
 
 export type AccentColor = "cyan" | "magenta" | "yellow" | "green";
 
@@ -123,6 +124,17 @@ export const GAMES: Game[] = [
     color: "cyan",
     best: 24,
     plays: "4.2K",
+  },
+  {
+    id: "asteroides",
+    title: "ASTEROIDES",
+    short: "Rota, propulsa y parte rocas antes de que te alcancen.",
+    long: "Tu nave triangular deriva en un campo de rocas toroidal: lo que sale por un borde entra por el otro. Dispara para partir los asteroides grandes en fragmentos cada vez más pequeños y recoge el power-up 3x para abrir fuego triple durante cinco segundos. Tres vidas, niveles sin techo y ninguna fricción.",
+    cat: "SHOOTER",
+    cover: "cover-asteroides",
+    color: "yellow",
+    best: 52340,
+    plays: "8.7K",
   },
 ];
 
