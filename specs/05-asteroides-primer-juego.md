@@ -1,6 +1,6 @@
 # SPEC 05 — Asteroides: el primer juego jugable
 
-> **Estado:** Draft
+> **Estado:** Aprobado
 > **Depende de:** SPEC 01, SPEC 02
 > **Fecha:** 2026-11-18
 > **Objetivo:** Convertir el HUD decorativo de `/play/[id]` en un juego real de asteroides jugable en `/play/asteroides`, portando `references/started-games/02-asteroids` a un motor TypeScript independiente con HUD, pausa y fin de partida integrados en la plataforma.
