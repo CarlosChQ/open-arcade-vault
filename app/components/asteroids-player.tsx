@@ -121,9 +121,22 @@ export function AsteroidsPlayer({ game }: { game: Game }) {
       }
     };
 
-    const onBlur = () => engineRef.current?.pause();
+    const releaseKeys = () => {
+      const engine = engineRef.current;
+      if (!engine) return;
+      engine.setKey("ArrowLeft", false);
+      engine.setKey("ArrowRight", false);
+      engine.setKey("ArrowUp", false);
+    };
+
+    const onBlur = () => {
+      releaseKeys();
+      engineRef.current?.pause();
+    };
     const onVisibilityChange = () => {
-      if (document.visibilityState === "hidden") engineRef.current?.pause();
+      if (document.visibilityState !== "hidden") return;
+      releaseKeys();
+      engineRef.current?.pause();
     };
 
     window.addEventListener("keydown", onKeyDown);
