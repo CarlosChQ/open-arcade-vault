@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { saveScore, type SaveScoreError } from "@/app/actions/scores";
 import type { Game } from "@/app/data/games";
 import {
   createAsteroidsEngine,
@@ -19,6 +21,15 @@ const INITIAL_SNAPSHOT: AsteroidsSnapshot = {
   tripleShot: 0,
 };
 
+const SAVE_ERROR_MESSAGES: Record<SaveScoreError, string> = {
+  not_configured: "SUPABASE NO ESTÁ CONFIGURADO",
+  invalid: "REVISA EL NOMBRE Y LA PUNTUACIÓN",
+  unknown_game: "NO SE PUDO GUARDAR. REINTENTA.",
+  save_failed: "NO SE PUDO GUARDAR. REINTENTA.",
+};
+
+type SaveState = "idle" | "saving" | "saved" | "not_improved" | "error";
+
 function isEditableTarget(target: EventTarget | null): boolean {
   if (!(target instanceof HTMLElement)) return false;
   const tag = target.tagName;
@@ -32,12 +43,14 @@ function isEditableTarget(target: EventTarget | null): boolean {
 
 export function AsteroidsPlayer({ game }: { game: Game }) {
   const { user } = useUser();
+  const router = useRouter();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<AsteroidsEngine | null>(null);
 
   const [snapshot, setSnapshot] = useState<AsteroidsSnapshot>(INITIAL_SNAPSHOT);
   const [name, setName] = useState(user ? user.name : "INVITADO");
-  const [saved, setSaved] = useState(false);
+  const [saveState, setSaveState] = useState<SaveState>("idle");
+  const [saveMessage, setSaveMessage] = useState("");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -163,8 +176,41 @@ export function AsteroidsPlayer({ game }: { game: Game }) {
   };
   const endGame = () => engineRef.current?.gameOver();
   const restart = () => {
-    setSaved(false);
+    setSaveState("idle");
+    setSaveMessage("");
     engineRef.current?.restart();
+  };
+
+  const saveDisabled =
+    snapshot.score <= 0 || name.trim().length === 0 || saveState === "saving";
+
+  const handleSave = async () => {
+    if (saveDisabled) return;
+
+    setSaveState("saving");
+    setSaveMessage("");
+
+    const result = await saveScore({
+      gameId: game.id,
+      playerName: name,
+      score: snapshot.score,
+    });
+
+    if (result.ok) {
+      if (result.improved) {
+        setSaveState("saved");
+        router.refresh();
+      } else {
+        setSaveState("not_improved");
+        setSaveMessage(
+          `NO SUPERA TU RÉCORD: ${result.bestScore.toLocaleString("es-ES")}`,
+        );
+      }
+      return;
+    }
+
+    setSaveState("error");
+    setSaveMessage(SAVE_ERROR_MESSAGES[result.error]);
   };
 
   const lives = snapshot.lives > 0 ? "♥ ".repeat(snapshot.lives).trim() : "—";
@@ -301,25 +347,40 @@ export function AsteroidsPlayer({ game }: { game: Game }) {
             <div className="final">
               {snapshot.score.toLocaleString("es-ES")}
             </div>
-            {!saved ? (
-              <div className="input-row">
-                <input
-                  value={name}
-                  onChange={(event) =>
-                    setName(event.target.value.toUpperCase().slice(0, 10))
-                  }
-                  placeholder="TUS INICIALES"
-                />
-                <button
-                  type="button"
-                  className="btn yellow"
-                  onClick={() => setSaved(true)}
-                >
-                  GUARDAR PUNTUACIÓN
-                </button>
-              </div>
-            ) : (
+            {saveState === "saved" ? (
               <div className="toast-saved">▸ PUNTUACIÓN GUARDADA_</div>
+            ) : (
+              <>
+                <div className="input-row">
+                  <input
+                    value={name}
+                    onChange={(event) =>
+                      setName(event.target.value.toUpperCase().slice(0, 10))
+                    }
+                    placeholder="TUS INICIALES"
+                    disabled={saveState === "saving"}
+                  />
+                  <button
+                    type="button"
+                    className="btn yellow"
+                    onClick={handleSave}
+                    disabled={saveDisabled}
+                  >
+                    {saveState === "saving"
+                      ? "GUARDANDO_"
+                      : "GUARDAR PUNTUACIÓN"}
+                  </button>
+                </div>
+                {(saveState === "not_improved" || saveState === "error") && (
+                  <div
+                    className={
+                      "save-note" + (saveState === "error" ? " error" : "")
+                    }
+                  >
+                    {saveMessage}
+                  </div>
+                )}
+              </>
             )}
             <div className="actions">
               <button type="button" className="btn" onClick={restart}>
